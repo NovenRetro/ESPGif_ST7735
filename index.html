@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Firmware Setup NovenRetro</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        color: #f0f0f0;
+        font-family: 'Press Start 2P', sans-serif;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 600px;
+        padding: 20px;
+      }
+
+      img {
+        width: 150px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 1em;
+        color: #fbeb04;
+        margin-bottom: 20px;
+      }
+
+      h6 {
+        color: #fbeb04;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 0.6em;
+        line-height: 1.5em;
+        margin-bottom: 30px;
+      }
+
+      esp-web-install-button.installer-button {
+        display: inline-block;
+        padding: 14px 28px;
+        background-color: #00aaff;
+        border-radius: 12px;
+        color: #fd0101;
+        font-family: 'Press Start 2P', sans-serif;
+        font-size: 0.6em;
+        text-transform: uppercase;
+        box-shadow: 0 0 15px rgba(237, 29, 82, 0.5);
+        transition: 0.3s ease;
+      }
+
+      esp-web-install-button.installer-button:hover {
+        filter: brightness(1.1);
+        cursor: pointer;
+      }
+
+      .github-link {
+ 
+}
+
+.github-link a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 1px solid #fb4dd0;
+  color: #fb4dd0;
+  border-radius: 8px;
+  font-size: 0.6em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.github-link a:hover {
+  background-color: #fb4dd0;
+  color: #121212;
+}
+
+.divider {
+  width: 80%;
+  border: none;
+  border-top: 1px solid #fbeb04;
+  opacity: 0.3;
+}
+
+.logo-inline {
+  height: 1.5em;
+  width: auto;
+  vertical-align:auto;
+  margin: 0 0px;
+  border-radius: 50%;
+}
+
+.images-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 40px 20px 20px;
+}
+
+.img-box {
+  text-align: center;
+  max-width: 200px;
+}
+
+.img-box img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: 1px solid #444;
+  background-color: #000;
+}
+
+
+.img-box img:hover {
+  transform: scale(1.05);
+}
+
+.img-box p {
+  font-size: 0.5em;
+  margin-top: 8px;
+  color: #fbeb04;
+}
+
+.blueretro-logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.blueretro-logo img {
+  max-width: 150px;
+  height: auto;
+  filter: drop-shadow(0 0 4px #00aaff);
+  transition: transform 0.2s ease;
+}
+
+.blueretro-logo img:hover {
+  transform: scale(1.50);
+}
+
+
+
+      footer {
+        margin-top: 5px;
+        font-size: 0.6em;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="logo-novenretro.png" alt="NovenRetro">
+      <h1>ESPGif by NovenRetro</h1>
+      <p>Conectá tu ESP32 por USB, seleccionalo entre los COM que puedan aparecerte y presioná el botón CONNECT para cargarle el firmware.  
+        <br><br>Puede que sea necesario que mantengas apretado el botón de Boot de tu ESP32 mientras se realiza el proceso.
+      <br><br><span style="color: #fbeb04;text-decoration: underline;">IMPORTANTE</span><br> Una vez cargado el firmware recuerda ingresar las credenciales de acceso a tu red WiFi. La dirección inicial de tu dispositivo será <span style="color: #fbeb04;">http://espgif.local</span> para que puedas ingresar al controlador y realizar tus configuraciones.</p>
+        <p>Recuerda debes ingresar desde Google Chrome o Edge en PC para que funcione correctamente este instalador.</p>
+        <h6>ESPGif es un firmware para ESP32 que reproduce GIFs animados en una pantalla ST7735 1.8" (128x160), permitiendo administrar los GIFs desde una web alojada en el propio ESP32 (subir, listar, reproducir y borrar).
+Soporta almacenamiento en microSD (recomendado) y fallback automático a SPIFFS si la SD no monta. Incluye además un Modo Avanzado para calibrar la pantalla (offset X/Y, rotación, swap de colores R/B y perfil TAB), guardado en memoria NVS (Preferences). </h4>
+      
+      <esp-web-install-button class="" manifest="manifest.json"> 
+      </esp-web-install-button>
+
+      <div class="images-row">
+        <div class="img-box">
+          <a href="esquema-de-conexiones.png" target="_blank">
+            <img src="esquema-de-conexiones.png" alt="Conexiones">
+          </a>
+          <p>Conexiones</p>
+        </div>
+
+        <div class="img-box">
+          <a href="Wall-Mount-Nintendo-Handhelds.rar" target="_blank">
+            <img src="preview-stls.png" alt="Conexiones">
+          </a>
+          <p>Archivos STL</p>
+        </div>
+
+      <hr class="divider"> 
+      <div class="github-link">
+        <a href="https://github.com/NovenRetro/ESPGif" target="_blank">
+          Ver Proyecto en GitHub
+        </a>
+      </div>      
+      <footer>
+        <img src="logo-novenretro.png" alt="Logo NovenRetro" class="logo-inline"> Desarrollado por @NovenRetro · Córdoba, Argentina. Prohibida su comercialización de cualquier forma.
+      </footer>
+    </div>
+  </body>
+</html>
+
