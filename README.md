@@ -1,116 +1,171 @@
-# Setup NovenRetro
+# ESPGif 🎞️ (ESP32 + ST7735 + SD/SPIFFS) — by NovenRetro
 
-<p align="center">
-  <img
-    src="https://novenretro.github.io/SetupNovenRetro/logo-novenretro.png"
-    alt="Setup NovenRetro"
-    width="200">
-</p>
+**ESPGif** es un firmware para **ESP32** que reproduce **GIFs animados** en una pantalla **ST7735 1.8" (128x160)**, permitiendo administrar los GIFs desde una **web** alojada en el propio ESP32 (subir, listar, reproducir y borrar).  
+Soporta almacenamiento en **microSD (recomendado)** y fallback automático a **SPIFFS** si la SD no monta.
+Incluye además un **Modo Avanzado** para **calibrar la pantalla** (offset X/Y, rotación, swap de colores R/B y perfil TAB), guardado en memoria **NVS (Preferences)**.
 
-## Descripción general
+## ✅ Features
 
-**Setup NovenRetro** es una herramienta basada en ESP32 para configurar tiras LED segmentadas a través de una interfaz web moderna y responsiva.  
+- Reproducción de **GIFs animados** en ST7735 usando **AnimatedGIF**
+- Render optimizado con **“runs opacos”** (mejor rendimiento con transparencias)
+- **Almacenamiento externo (microSD)** y **fallback** a interno (**SPIFFS**)
+- Web UI mobile-friendly (estilo NovenRetro):
+  - Subir GIF (multipart)
+  - Listar GIFs
+  - Reproducir un GIF
+  - Eliminar un GIF
+  - “Reproduciendo ahora” con refresco automático
+- **mDNS**: acceso por `http://espgif.local`
+- **Improv Wi-Fi Serial** (compatible con **ESP Web Tools**) para configurar Wi-Fi sin recompilar
+- **Modo Avanzado de Pantalla** (`/advanced`):
+  - Offset X/Y (setColRowStart)
+  - Rotación (0..3)
+  - Swap R/B (corrección de color)
+  - Perfil TAB (Green/Black/Red) con persistencia
+  - Guardar configuración en **NVS** y reiniciar si hace falta
 
-**Novedades hasta v2.0.x**  
-- **OTA Update desde GitHub**  
-  - Comprobación de `version.txt` en tu repositorio → botón **Buscar actualización** en `/config`  
-  - Si hay nueva versión, muestra un diálogo de confirmación:
-    ```
-    Versión actual: X.X.X  
-    Nueva versión: Y.Y.Y disponible.  
-    ¿Desea actualizar a la última versión disponible?  
-    [Aceptar] [Cancelar]
-    ```
-  - Al **Aceptar**, descarga e instala automáticamente  
-  - Guarda la versión instalada en `Preferences` para futuras comparaciones  
-- **Señalización post-arranque**  
-  - Tras reinicio (incluyendo OTA) el LED azul de GPIO2 parpadea 3 s para indicar que el dispositivo está listo  
-- **Hasta 10 presets** en lugar de 5  
-- Personalización y refinamientos de UI (confirmaciones, alertas, recarga automática)
+## 🧩 Hardware soportado
 
-## Características principales
+- **ESP32 DevKit** (u otro ESP32 compatible)
+- Pantalla **ST7735 1.8" 128x160** (módulo rojo común)
+- Lector **microSD** (en tu caso, integrado en la misma placa con la pantalla)
 
-1. **Segmentación dinámica**  
-   - Define nombre y longitud de cada segmento  
-   - Visualiza la suma total de LEDs y el punto de inicio de cada segmento  
+> Nota: muchos módulos ST7735 “combo” comparten SPI entre pantalla y SD. Este firmware contempla el bus compartido controlando CS.
 
-2. **Control de color y efectos**  
-   - Color de tira y color de segmento con pickers HTML5  
-   - Efectos disponibles:  
-     - **Glow** (velocidad ajustable)  
-     - **Rainbow** y **Rainbow V2**  
-     - **Fire**
+## 🔌 Conexiones (pinout)
+Este firmware asume **SPI compartido** para TFT y SD:
 
-3. **Brillo y encendido**  
-   - Rango de brillo 1–10  
-   - Botón global ON/OFF
+### SPI (compartido)
+- `SCLK` → GPIO **18**
+- `MOSI` → GPIO **23**
+- `MISO` → GPIO **19** (solo SD)
 
-4. **Presets**  
-   - Guarda hasta **10** configuraciones completas  
-   - Guardar, cargar y eliminar con alert/confirm y reinicio automático del ESP32
+### TFT ST7735
+- `TFT_CS`  → GPIO **5**
+- `TFT_DC`  → GPIO **16**
+- `TFT_RST` → GPIO **17**
+- `VCC`     → **3.3V**
+- `GND`     → GND
+- Backlight/LED → **3.3V** (directo)
 
-5. **mDNS y nombre de dispositivo**  
-   - Descubrimiento via `<nombre>.local` (por defecto `setup-novenretro.local`)  
-   - Cambia el nombre desde **/config** sin recompilar
+### microSD
+- `SD_CS`   → GPIO **4**
+- `VCC`     → **3.3V**
+- `GND`     → GND
 
-6. **Flasheo desde web**  
-   - Abre [https://novenretro.github.io/SetupNovenRetro/](https://novenretro.github.io/SetupNovenRetro/)  
-   - Conecta tu ESP32 por USB y selecciona el `.bin` para cargarlo directamente desde el navegador
+📌 Pines definidos en el código:
+#define SD_CS    4
+#define SD_MOSI  23
+#define SD_MISO  19
+#define SD_SCLK  18
 
-7. **OTA con confirmación**  
-   - En `/config`, al pulsar **Buscar actualización**:
-     - Si la versión en GitHub es igual a la guardada, muestra “Ya tienes la última versión…”  
-     - Si es más reciente, aparece el diálogo de confirmación con versión actual vs. nueva  
-     - Al **Aceptar**, descarga e instala automáticamente; al **Cancelar**, no hace nada  
-     - Mensajes de estado: “Falló actualización: …” en caso de error
+#define TFT_CS   5
+#define TFT_DC   16
+#define TFT_RST  17
+#define TFT_SCLK 18
+#define TFT_MOSI 23
 
-8. **Indicador de arranque**  
-   - El LED de GPIO2 parpadea 3 s al arrancar tras cualquier reinicio
+📁 Estructura de archivos en el almacenamiento
+Todos los GIFs se guardan en:
+/gifs/
+El firmware intenta reproducir:
 
-## Requisitos
+/gifs/idle.gif como “idle” inicial
+Si no existe, muestra una pantalla fallback con texto.
 
-- ESP32 (Serie 32, WROOM, WROVER…)  
-- Tira de LEDs WS2812 / NeoPixel  
-- Arduino IDE 1.8+ o PlatformIO  
-- Librerías:
-  - `WiFi.h`
-  - `WebServer.h`
-  - `Adafruit_NeoPixel.h`
-  - `Preferences.h`
-  - `ImprovWiFiLibrary.h`
-  - `ESPmDNS.h`
-  - `HTTPClient.h`
-  - `HTTPUpdate.h`
+🌐 Interfaz Web
+Home
 
-## Instalación y flasheo
+Acceder por:
+http://espgif.local (si mDNS funciona)
+o por IP local mostrada en pantalla
 
-### 1. Desde Arduino IDE / PlatformIO
-1. Clona este repositorio.  
-2. Selecciona tu placa ESP32.  
-3. Compila y sube el firmware.
+Permite:
+Subir GIF
+Ver lista de GIFs
+Reproducir uno
+Eliminar
+Ver el GIF “reproduciendo ahora”
 
-### 2. Flasheo web
-1. Abre [https://novenretro.github.io/SetupNovenRetro/](https://novenretro.github.io/SetupNovenRetro/).  
-2. Conecta tu ESP32 por USB.  
-3. Elige el puerto y el firmware `.bin`.  
-4. Haz clic en **Flash** y espera al progreso.
+Modo Avanzado (Pantalla)
+http://espgif.local/advanced
 
-## Uso
+Permite:
+PROBAR (sin guardar): aplica offset/rot/swap en caliente
+GUARDAR: persiste en NVS
+GUARDAR Y REINICIAR: recomendado si cambiás el perfil TAB
+RESTABLECER: borra calibración y reinicia
 
-1. Al arrancar, el LED azul (GPIO2) parpadea 3 s.  
-2. Conecta vía ImprovWiFi o introduce tus credenciales Wi-Fi.  
-3. Accede por IP o a `http://<nombre>.local` (por defecto `setup-novenretro.local`).  
-4. En **Configuración**:  
-   - Define tus segmentos físicos.  
-   - Personaliza nombre mDNS, título y cabecera.  
-5. En la página principal:  
-   - Ajusta color, efectos y brillo.  
-   - Usa ON/OFF y **Sorpréndeme** para selección aleatoria.  
-6. **Presets**:  
-   - Selecciona slot, pon nombre y guarda.  
-   - Carga o elimina con confirmación.  
-7. **OTA**:  
-   - En `/config`, pulsa **Buscar actualización** (pide confirmación si hay nueva versión, **Aceptar** / **Cancelar**).
+🔧 Endpoints HTTP (API)
+GET / → UI principal
+GET /advanced → UI modo avanzado
+GET /hello → info del firmware y estado
+GET /status → JSON con playing y uptime
+GET /list → JSON con lista de archivos en /gifs
+POST /play?name=<archivo.gif> → reproduce un GIF
+POST /idle → reproduce idle (/gifs/idle.gif)
+POST /delete?name=<archivo.gif> → borra un GIF
+POST /upload → sube GIF por multipart (FormData)
+POST /wifi/reset → borra credenciales Wi-Fi y reinicia
+
+Pantalla (Modo Avanzado)
+GET /display/config
+POST /display/apply (aplica sin guardar)
+POST /display/save (guarda en NVS)
+
+opcional ?reboot=1 para reiniciar
+POST /display/reset (borra calibración y reinicia)
+
+🧠 Persistencia (NVS / Preferences)
+Namespace: "ESPGif"
+Wi-Fi
+wifi_ssid
+wifi_pass
+
+Pantalla
+d_offx (char)
+d_offy (char)
+d_rot (uchar)
+d_tab (uchar)
+d_swap (uchar)
+
+📶 Wi-Fi (Improv / ESP Web Tools)
+El firmware soporta Improv Wi-Fi Serial:
+Si no existen credenciales guardadas, el firmware queda esperando configuración por Improv.
+Cuando se recibe SSID/PASS, se guarda en NVS y se conecta.
+
+
+🎨 Calibración de pantalla (TAB / Offset / Swap)
+Dependiendo del módulo ST7735, puede variar:
+perfil TAB correcto (GREENTAB, BLACKTAB, REDTAB)
+offset de inicio (col/row start)
+swap R/B si los colores se ven invertidos
+Este firmware resuelve eso desde el Modo Avanzado sin recompilar:
+Ajustás visualmente
+Probás en vivo
+Guardás en NVS
+
+🧯 Troubleshooting
+“En SPIFFS anda perfecto pero en SD se cuelga”
+Probá otra microSD (muchas SD “raras” fallan en SPI aunque funcionen en PC)
+Formateá en FAT32
+Evitá SDs muy grandes o exFAT
+En módulos combo, una SD mala puede provocar cuelgues/reinicios raros
+
+✅ Caso real: cambiar la SD solucionó el problema completamente.
+“No veo espgif.local”
+Depende del soporte mDNS del dispositivo/red.
+Usá la IP que muestra la pantalla.
+“Upload ok pero no aparece en la lista”
+Verificá que exista /gifs/
+Verificá que el archivo sea .gif (se sanitiza el nombre)
+Reintentá con un GIF liviano
+
+📌 Créditos / Librerías
+AnimatedGIF (decodificación de GIF)
+Adafruit_GFX + Adafruit_ST7735
+ESP32 Arduino Core
+Improv Wi-Fi (ESP Web Tools friendly)
 
 ## Contribuir
 
@@ -126,3 +181,4 @@ Este proyecto está bajo la [MIT License](LICENSE).
 
 ---  
 **Web de flasheo y documentación** → https://novenretro.github.io/SetupNovenRetro/  
+
