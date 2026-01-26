@@ -1,6 +1,6 @@
 {
-  "name": "ESPGif",
-  "version": "1.0.0",
+  "name": "ESPGif_ST7735",
+  "version": "1.2.0",
   "builds": [
     {
       "chipFamily": "ESP32",
