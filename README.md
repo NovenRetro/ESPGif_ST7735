@@ -2,9 +2,17 @@ ESPGif 🎞️ (ESP32 + ST7735 + SD/SPIFFS) — by NovenRetro
 
 ESPGif es un firmware para ESP32 que reproduce GIFs animados y imágenes JPG/JPEG en una pantalla ST7735 1.8" (128x160), permitiendo administrar el contenido desde una web alojada en el propio ESP32 (subir, listar, reproducir y borrar).
 
+<<<<<<< HEAD
 Soporta almacenamiento en microSD (recomendado) y fallback automático a SPIFFS si la SD no monta. Incluye un Modo Avanzado para calibrar la pantalla (offset X/Y, rotación, swap de colores R/B y perfil TAB), con persistencia en NVS (Preferences).
 
 ✅ Features 🎞️ Multimedia
+=======
+Soporta almacenamiento en microSD (recomendado) y fallback automático a SPIFFS si la SD no monta.
+Incluye un Modo Avanzado para calibrar la pantalla (offset X/Y, rotación, swap de colores R/B y perfil TAB), con persistencia en NVS (Preferences).
+
+✅ Features
+🎞️ Multimedia
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 Reproducción de GIFs animados (AnimatedGIF)
 
@@ -80,9 +88,17 @@ Pantalla ST7735 1.8" 128×160 (módulo rojo común)
 
 Lector microSD (integrado o externo)
 
+<<<<<<< HEAD
 💡 Muchos módulos ST7735 “combo” comparten el bus SPI con la SD. Este firmware maneja correctamente SPI compartido mediante control de CS.
 
 🔌 Conexiones (pinout) SPI (compartido)
+=======
+💡 Muchos módulos ST7735 “combo” comparten el bus SPI con la SD.
+Este firmware maneja correctamente SPI compartido mediante control de CS.
+
+🔌 Conexiones (pinout)
+SPI (compartido)
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 SCLK → GPIO 18
 
@@ -113,6 +129,14 @@ VCC → 3.3V
 GND → GND
 
 📌 Pines definidos en el código:
+<<<<<<< HEAD
+=======
+
+#define SD_CS    4
+#define SD_MOSI  23
+#define SD_MISO  19
+#define SD_SCLK  18
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 #define SD_CS 4 #define SD_MOSI 23 #define SD_MISO 19 #define SD_SCLK 18
 
@@ -122,12 +146,39 @@ GND → GND
 
 Todos los archivos se guardan en:
 
+<<<<<<< HEAD
 /gifs/
+
+Archivos soportados:
+=======
+📁 Estructura de archivos
+
+Todos los archivos se guardan en:
+
+/gifs/
+
 
 Archivos soportados:
 
 .gif
 
+.jpg
+
+.jpeg
+
+Archivo especial:
+
+/gifs/idle.gif
+
+
+Se reproduce automáticamente como idle al iniciar el sistema o cuando no hay contenido activo.
+
+Si no existe, se muestra una pantalla fallback con texto.
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
+
+.gif
+
+<<<<<<< HEAD
 .jpg
 
 .jpeg
@@ -142,6 +193,8 @@ Si no existe, se muestra una pantalla fallback con texto.
 
 🌐 Interfaz Web Home
 
+=======
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 Acceso por:
 
 http://espgif.local
@@ -149,6 +202,19 @@ http://espgif.local
 o por la IP local mostrada en pantalla
 
 Permite:
+<<<<<<< HEAD
+=======
+
+Subir GIF o JPG
+
+Ver lista de archivos
+
+Reproducir cualquier media
+
+Eliminar archivos
+
+Ver qué archivo está en reproducción
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 Subir GIF o JPG
 
@@ -162,6 +228,7 @@ Ver qué archivo está en reproducción
 
 Modo Avanzado (Pantalla) http://espgif.local/advanced
 
+
 Permite:
 
 PROBAR: aplicar ajustes sin guardar
@@ -172,7 +239,12 @@ GUARDAR Y REINICIAR: recomendado al cambiar TAB
 
 RESTABLECER: borra calibración y reinicia
 
+<<<<<<< HEAD
 🔧 Endpoints HTTP (API) UI
+=======
+🔧 Endpoints HTTP (API)
+UI
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 GET / → UI principal
 
@@ -192,7 +264,11 @@ POST /play?name=<archivo.gif|jpg>
 
 POST /idle
 
+<<<<<<< HEAD
 POST /delete?name=
+=======
+POST /delete?name=<archivo>
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
 
 POST /upload → subida multipart (GIF/JPG)
 
@@ -304,4 +380,12 @@ Pull Request con descripción clara
 
 📄 Licencia
 
+<<<<<<< HEAD
 MIT License © NovenRetro 2025 — Todos los derechos reservados
+=======
+MIT License
+© NovenRetro 2025 — Todos los derechos reservados
+
+Web de flasheo y documentación
+👉 https://novenretro.github.io/SetupNovenRetro/
+>>>>>>> 96358b87bc8cc25cc6452bcfebff3ece1adfc0a0
